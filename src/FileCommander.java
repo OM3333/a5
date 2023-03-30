@@ -52,6 +52,12 @@ public class FileCommander {
     public List<String> ls(String flags) throws IOException {
         Stream<Path> files = Files.list(this.path);
         List result = files
+                .filter((path) -> {
+                    if(flags.contains("--filter=")){
+                        String text = flags.substring(flags.indexOf("--filter="),flags.indexOf(" ",flags.indexOf("--filter=")));
+
+                    }
+                })
                 .sorted((path1, path2) -> {
                     return Boolean.compare(!Files.isDirectory(path1),!Files.isDirectory(path2));
                 })
