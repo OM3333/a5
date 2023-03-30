@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -29,22 +30,39 @@ public class FileCommander {
         return new File(this.path.toString());
     }
 
-    private String pathToString(Path path) {
+    private String pathToStringBracket(Path path) {
         if (!path.toFile().isFile()) {
-            return "[" + path.toString() + "]";
+            String addLeft = "[";
+            String addRight = "]";
+            return addLeft+ path.toString() + addRight;
+        } else {
+            return path.toString();
+        }
+    }
+    private String pathToStringColor(Path path) {
+        if (!path.toFile().isFile()) {
+            String addLeft = ConsoleColors.BLUE;
+            String addRight = ConsoleColors.RESET;
+            return addLeft+ path.toString() + addRight;
         } else {
             return path.toString();
         }
     }
 
-    public List<String> ls() throws IOException {
+    public List<String> ls(String flags) throws IOException {
         Stream<Path> files = Files.list(this.path);
         List result = files
                 .sorted((path1, path2) -> {
                     return Boolean.compare(!Files.isDirectory(path1),!Files.isDirectory(path2));
                 })
                 .map((path) -> {
-                    return pathToString(path);
+                    if(flags.contains("--colors")){
+                        return pathToStringColor(path);
+                    }
+                    else{
+                        return pathToStringBracket(path);
+                    }
+
                 })
                 .collect(Collectors.toList());
 

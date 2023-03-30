@@ -1,12 +1,10 @@
 public class Main {
     public static void main(String[] args) {
-        FileCommander fc = new FileCommander();
+        FileCommanderCLI fc = new FileCommanderCLI(System.in, System.out);
         try{
-            for(String s : fc.find("klipper")){
-                System.out.println(s);
-            }
+            fc.eventLoop();
         }catch (Exception e){
-
+            e.printStackTrace();
         }
 
     }
